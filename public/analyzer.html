@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Analysis Service</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background: #f8f9fa;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .form-group { margin-bottom: 20px; }
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: bold; 
+            color: #333;
+        }
+        input[type="url"] { 
+            width: 100%; 
+            padding: 12px; 
+            border: 2px solid #ddd; 
+            border-radius: 6px; 
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="url"]:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        button { 
+            background: #007bff; 
+            color: white; 
+            padding: 12px 24px; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        button:hover { background: #0056b3; }
+        button:disabled { 
+            background: #6c757d; 
+            cursor: not-allowed; 
+        }
+        .result { 
+            margin-top: 20px; 
+            padding: 20px; 
+            border: 1px solid #ddd; 
+            border-radius: 6px; 
+            display: none; 
+            background: #f8f9fa;
+        }
+        .loading { 
+            display: none; 
+            color: #007bff; 
+            text-align: center;
+            padding: 20px;
+        }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .info { color: #17a2b8; }
+        .result-link { margin-top: 15px; }
+        .result-link a { 
+            color: #007bff; 
+            text-decoration: none; 
+            font-weight: bold;
+        }
+        .result-link a:hover { text-decoration: underline; }
+        h1 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .description {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>YouTube Analysis Service</h1>
+        <p class="description">Nhập URL YouTube để phân tích video và kiểm tra AI probability</p>
+        
+        <form id="analyzeForm">
+            <div class="form-group">
+                <label for="youtubeUrl">URL YouTube:</label>
+                <input type="url" id="youtubeUrl" name="youtube_url" required 
+                       placeholder="https://www.youtube.com/watch?v=...">
+            </div>
+            <button type="button" id="analyzeBtn" onclick="analyzeVideo()">Phân tích</button>
+        </form>
+        
+        <div class="loading" id="loading">
+            <div style="margin-bottom: 10px;">⏳ Đang xử lý... Vui lòng chờ trong giây lát.</div>
+            <div style="width: 100%; height: 4px; background: #e9ecef; border-radius: 2px; overflow: hidden;">
+                <div id="progressBar" style="width: 0%; height: 100%; background: #007bff; transition: width 0.3s;"></div>
+            </div>
+        </div>
+        
+        <div class="result" id="result">
+            <h3>Kết quả phân tích:</h3>
+            <div id="resultContent"></div>
+            <div class="result-link" id="resultLink" style="display: none;">
+                <a href="#" id="viewResultLink" target="_blank">📊 Xem kết quả chi tiết →</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        console.log('🚀 YouTube Analysis Service - JavaScript loaded successfully');
+        
+        // Hàm phân tích video
+        function analyzeVideo() {
+            console.log('🖱️ Button clicked! Starting analysis process...');
+            
+            // Kiểm tra các element có tồn tại không
+            const urlInput = document.getElementById('youtubeUrl');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const loadingDiv = document.getElementById('loading');
+            const resultDiv = document.getElementById('result');
+            const resultContent = document.getElementById('resultContent');
+            const resultLink = document.getElementById('resultLink');
+            const viewResultLink = document.getElementById('viewResultLink');
+            
+            if (!urlInput || !analyzeBtn || !loadingDiv || !resultDiv || !resultContent || !resultLink || !viewResultLink) {
+                console.error('❌ Missing required elements:', {
+                    urlInput: !!urlInput,
+                    analyzeBtn: !!analyzeBtn,
+                    loadingDiv: !!loadingDiv,
+                    resultDiv: !!resultDiv,
+                    resultContent: !!resultContent,
+                    resultLink: !!resultLink,
+                    viewResultLink: !!viewResultLink
+                });
+                alert('Lỗi: Không thể tìm thấy các thành phần cần thiết');
+                return;
+            }
+            
+            const url = urlInput.value;
+            console.log('🔗 YouTube URL to analyze:', url);
+            
+            if (!url) {
+                console.log('⚠️ No URL provided - showing alert');
+                alert('Vui lòng nhập URL YouTube');
+                return;
+            }
+            
+            console.log('✅ URL validation passed');
+            
+            // Disable button
+            analyzeBtn.disabled = true;
+            analyzeBtn.textContent = 'Đang xử lý...';
+            console.log('🔒 Button disabled and text updated');
+            
+            // Show loading
+            loadingDiv.style.display = 'block';
+            resultDiv.style.display = 'none';
+            console.log('⏳ Loading indicator shown, result hidden');
+            
+            // Animate progress bar
+            let progress = 0;
+            const progressBar = document.getElementById('progressBar');
+            const progressInterval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 90) progress = 90;
+                progressBar.style.width = progress + '%';
+            }, 500);
+            
+            console.log('📤 Sending POST request to /api/analyze...');
+            
+            // Gửi request
+            fetch('/api/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ youtube_url: url })
+            })
+            .then(function(response) {
+                console.log('📥 Received response - Status:', response.status, response.statusText);
+                clearInterval(progressInterval);
+                progressBar.style.width = '100%';
+                return response.json();
+            })
+            .then(function(data) {
+                console.log('📊 Response data received:', data);
+                
+                if (data.status === 'processing') {
+                    console.log('✅ Job created successfully');
+                    console.log('📋 Job Status:', data.status);
+                    console.log('📋 Job ID:', data.job_id);
+                    console.log('💬 Message:', data.message);
+                    
+                    resultContent.innerHTML = 
+                        '<p><strong>✅ Job Status:</strong> ' + data.status + '</p>' +
+                        '<p><strong>📋 Job ID:</strong> ' + data.job_id + '</p>' +
+                        '<p><strong>⏰ Xin đợi kết quả...</strong></p>';
+                    
+                    // Ẩn link kết quả và bắt đầu timer 20 giây
+                    resultLink.style.display = 'none';
+                    console.log('⏳ Job processing - hiding result link and starting 20s timer');
+                    
+                    // Sau 20 giây sẽ hiển thị link kết quả
+                    setTimeout(() => {
+                        console.log('⏰ 20 seconds passed - showing result link');
+                        
+                        // Cập nhật nội dung
+                        resultContent.innerHTML = 
+                            '<p><strong>✅ Job Status:</strong> completed</p>' +
+                            '<p><strong>📋 Job ID:</strong> ' + data.job_id + '</p>' +
+                            '<p><strong>✅ Hoàn thành phân tích!</strong></p>';
+                        
+                        // Hiển thị link kết quả
+                        viewResultLink.href = '/app/result/' + data.job_id;
+                        resultLink.style.display = 'block';
+                        console.log('🔗 Result link created: /app/result/' + data.job_id);
+                        
+                        // Đảm bảo result section hiển thị
+                        document.getElementById('result').style.display = 'block';
+                    }, 20000); // 20 giây
+                    
+                } else if (data.status === 'completed') {
+                    console.log('✅ Job completed immediately');
+                    resultContent.innerHTML = 
+                        '<p><strong>✅ Job Status:</strong> ' + data.status + '</p>' +
+                        '<p><strong>📋 Job ID:</strong> ' + data.job_id + '</p>' +
+                        '<p><strong>✅ Hoàn thành phân tích!</strong></p>';
+                    
+                    // Hiển thị link kết quả
+                    viewResultLink.href = '/app/result/' + data.job_id;
+                    resultLink.style.display = 'block';
+                    console.log('🔗 Result link created: /app/result/' + data.job_id);
+                    
+                } else {
+                    console.log('❌ Error in response:', data.error || data.message);
+                    resultContent.innerHTML = '<p style="color: red;">❌ Lỗi: ' + (data.error || data.message) + '</p>';
+                    // Ẩn link kết quả nếu có lỗi
+                    resultLink.style.display = 'none';
+                }
+            })
+            .catch(function(error) {
+                console.error('💥 Fetch error occurred:', error);
+                console.error('🔍 Error details:', error.message);
+                clearInterval(progressInterval);
+                resultContent.innerHTML = '<p style="color: red;">❌ Lỗi kết nối: ' + error.message + '</p>';
+                // Ẩn link kết quả nếu có lỗi
+                resultLink.style.display = 'none';
+            })
+            .finally(function() {
+                console.log('🏁 Request completed - Cleaning up UI');
+                
+                // Re-enable button
+                analyzeBtn.disabled = false;
+                analyzeBtn.textContent = 'Phân tích';
+                console.log('🔓 Button re-enabled');
+                
+                // Hide loading, show result
+                loadingDiv.style.display = 'none';
+                resultDiv.style.display = 'block';
+                console.log('📋 Result section displayed');
+                
+                // Đảm bảo link kết quả được ẩn nếu chưa hoàn thành
+                const currentContent = resultContent.innerHTML;
+                if (currentContent.includes('❌ Lỗi') || currentContent.includes('⏰ Xin đợi kết quả')) {
+                    resultLink.style.display = 'none';
+                }
+            });
+        }
+        
+
+        
+        // Thêm event listener cho Enter key
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 DOM loaded - Ready to initialize components');
+            
+            const urlInput = document.getElementById('youtubeUrl');
+            if (urlInput) {
+                urlInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        analyzeVideo();
+                    }
+                });
+                console.log('✅ Enter key listener added');
+            } else {
+                console.error('❌ URL input not found');
+            }
+            
+            // Kiểm tra tất cả các element cần thiết
+            const requiredElements = [
+                'youtubeUrl', 'analyzeBtn', 'loading', 'result', 
+                'resultContent', 'resultLink', 'viewResultLink'
+            ];
+            
+            const missingElements = requiredElements.filter(id => !document.getElementById(id));
+            if (missingElements.length > 0) {
+                console.error('❌ Missing elements:', missingElements);
+            } else {
+                console.log('✅ All required elements found');
+            }
+            
+            console.log('✅ Event listeners set up successfully');
+        });
+    </script>
+</body>
+</html>

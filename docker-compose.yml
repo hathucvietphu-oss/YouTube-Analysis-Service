@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  youtube-analysis-service:
+    build: .
+    container_name: youtube-analysis-service
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+      - GPTZERO_API_KEY=${GPTZERO_API_KEY}
+      - PUPPETEER_HEADLESS=true
+      - PUPPETEER_ARGS=--no-sandbox,--disable-setuid-sandbox,--disable-dev-shm-usage
+      - FFMPEG_PATH=/usr/bin/ffmpeg
+      - STORAGE_PATH=/app/storage
+      - SCREENSHOTS_PATH=/app/storage/screenshots
+      - AUDIO_PATH=/app/storage/audio
+      - RATE_LIMIT_WINDOW_MS=900000
+      - RATE_LIMIT_MAX_REQUESTS=10
+    volumes:
+      - ./storage:/app/storage
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:8080/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    networks:
+      - youtube-analysis-network
+
+  # Optional: Redis for job queue (for production)
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: youtube-analysis-redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   restart: unless-stopped
+  #   networks:
+  #     - youtube-analysis-network
+
+networks:
+  youtube-analysis-network:
+    driver: bridge
+
+# volumes:
+#   redis_data:
+#     driver: local

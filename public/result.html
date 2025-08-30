@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kết quả phân tích - YouTube Analysis Service</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            background: #f8f9fa; 
+            color: #333;
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+        .header { 
+            background: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+            margin-bottom: 20px;
+        }
+        .header h1 { 
+            margin: 0; 
+            color: #007bff; 
+            font-size: 2em;
+        }
+        .back-link { 
+            color: #007bff; 
+            text-decoration: none; 
+            margin-bottom: 20px; 
+            display: inline-block;
+        }
+        .back-link:hover { text-decoration: underline; }
+        
+        .status-card { 
+            background: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+            margin-bottom: 20px;
+        }
+        .status-processing { border-left: 4px solid #ffc107; }
+        .status-completed { border-left: 4px solid #28a745; }
+        .status-failed { border-left: 4px solid #dc3545; }
+        
+        .progress-bar { 
+            width: 100%; 
+            height: 20px; 
+            background: #e9ecef; 
+            border-radius: 10px; 
+            overflow: hidden; 
+            margin: 10px 0;
+        }
+        .progress-fill { 
+            height: 100%; 
+            background: linear-gradient(90deg, #007bff, #0056b3); 
+            transition: width 0.3s ease;
+        }
+        
+
+        .result-card { 
+            background: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .result-card h3 { 
+            margin-top: 0; 
+            color: #007bff; 
+            border-bottom: 2px solid #e9ecef; 
+            padding-bottom: 10px;
+        }
+        
+        .screenshot-container { 
+            text-align: center; 
+            margin: 20px 0;
+        }
+        .screenshot { 
+            max-width: 100%; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .transcript-container { 
+            max-height: 400px; 
+            overflow-y: auto; 
+            border: 1px solid #e9ecef; 
+            border-radius: 4px; 
+            padding: 15px;
+        }
+        .sentence { 
+            margin-bottom: 15px; 
+            padding: 10px; 
+            border-radius: 4px; 
+            border-left: 3px solid #e9ecef;
+        }
+        .sentence:hover { background: #f8f9fa; }
+        .sentence.ai-high { border-left-color: #dc3545; background: #fff5f5; }
+        .sentence.ai-medium { border-left-color: #ffc107; background: #fffbf0; }
+        .sentence.ai-low { border-left-color: #28a745; background: #f0fff4; }
+        
+        .sentence-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 5px;
+        }
+        .speaker { 
+            font-weight: bold; 
+            color: #007bff; 
+        }
+        .timestamp { 
+            color: #6c757d; 
+            font-size: 0.9em; 
+        }
+        .ai-probability { 
+            padding: 2px 8px; 
+            border-radius: 12px; 
+            font-size: 0.8em; 
+            font-weight: bold;
+        }
+        .ai-high { background: #dc3545; color: white; }
+        .ai-medium { background: #ffc107; color: #212529; }
+        .ai-low { background: #28a745; color: white; }
+        
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 15px; 
+            margin: 20px 0;
+        }
+        .stat-card { 
+            background: white; 
+            padding: 15px; 
+            border-radius: 8px; 
+            text-align: center; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .stat-number { 
+            font-size: 2em; 
+            font-weight: bold; 
+            color: #007bff; 
+        }
+        .stat-label { 
+            color: #6c757d; 
+            margin-top: 5px;
+        }
+        
+        .loading { 
+            text-align: center; 
+            padding: 40px; 
+            color: #007bff;
+        }
+        .spinner { 
+            border: 4px solid #f3f3f3; 
+            border-top: 4px solid #007bff; 
+            border-radius: 50%; 
+            width: 40px; 
+            height: 40px; 
+            animation: spin 1s linear infinite; 
+            margin: 0 auto 20px;
+        }
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+        
+        .error { 
+            background: #fff5f5; 
+            border: 1px solid #fed7d7; 
+            color: #c53030; 
+            padding: 15px; 
+            border-radius: 4px; 
+            margin: 20px 0;
+        }
+        
+        .download-btn { 
+            background: #28a745; 
+            color: white; 
+            padding: 8px 16px; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            text-decoration: none; 
+            display: inline-block; 
+            margin: 5px;
+        }
+        .download-btn:hover { background: #218838; }
+        
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="/app/analyzer" class="back-link">← Quay lại trang chủ</a>
+            <h1>Kết quả phân tích</h1>
+            <p>Job ID: <strong id="jobIdDisplay"></strong></p>
+        </div>
+        
+        <div id="content">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Đang tải kết quả...</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Lấy job ID từ URL
+        const pathParts = window.location.pathname.split('/');
+        const jobId = pathParts[pathParts.length - 1];
+        
+        console.log('🔍 Result page loaded for Job ID:', jobId);
+        document.getElementById('jobIdDisplay').textContent = jobId;
+        
+        async function loadResult() {
+            console.log('📤 Fetching result data for job:', jobId);
+            try {
+                const response = await fetch(`/api/result/${jobId}`);
+                console.log('📥 Response received - Status:', response.status, response.statusText);
+                
+                const data = await response.json();
+                console.log('📊 Result data:', data);
+                
+                if (response.ok) {
+                    console.log('✅ Response OK - Displaying result');
+                    displayResult(data);
+                } else {
+                    console.log('❌ Response error - Displaying error');
+                    displayError(data.error || data.message);
+                }
+            } catch (error) {
+                console.error('💥 Error fetching result:', error);
+                if (error.message.includes('404')) {
+                    // Nếu lỗi 404, có thể job vẫn đang xử lý
+                    displayError('Job đang được xử lý. Vui lòng thử lại sau.');
+                    // Tự động làm mới sau 5 giây
+                    setTimeout(loadResult, 5000);
+                } else {
+                    displayError('Lỗi kết nối: ' + error.message);
+                }
+            }
+        }
+        
+        function displayResult(data) {
+            console.log('🎨 Displaying result with status:', data.status);
+            const content = document.getElementById('content');
+            
+            if (data.status === 'processing') {
+                console.log('⏳ Job is still processing - showing progress');
+                content.innerHTML = `
+                    <div class="status-card status-processing">
+                        <h3>⏳ Đang xử lý</h3>
+                        <p>${data.message}</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${data.progress || 0}%"></div>
+                        </div>
+                        <p>Thời gian tạo: ${new Date(data.created_at).toLocaleString('vi-VN')}</p>
+                        <button onclick="location.reload()" style="background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">🔄 Làm mới</button>
+                    </div>
+                `;
+                console.log('🔄 Auto-refresh scheduled in 5 seconds');
+                // Tự động làm mới sau 5 giây
+                setTimeout(loadResult, 5000);
+            } else if (data.status === 'completed') {
+                console.log('✅ Job completed - displaying full results');
+                content.innerHTML = `
+                    <div class="status-card status-completed">
+                        <h3>✅ Hoàn thành</h3>
+                        <p>Thời gian tạo: ${new Date(data.created_at).toLocaleString('vi-VN')}</p>
+                        <p>Thời gian hoàn thành: ${new Date(data.completed_at).toLocaleString('vi-VN')}</p>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">${data.result.metadata.total_sentences}</div>
+                            <div class="stat-label">Tổng số câu</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${data.result.metadata.total_speakers}</div>
+                            <div class="stat-label">Số người nói</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${data.result.metadata.average_ai_probability}%</div>
+                            <div class="stat-label">AI Probability TB</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${Math.round(data.result.metadata.processing_time / 1000)}s</div>
+                            <div class="stat-label">Thời gian xử lý</div>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h3>🎵 Audio</h3>
+                        <p>Tải xuống file âm thanh đã trích xuất:</p>
+                        <audio controls style="width: 100%; margin: 10px 0;">
+                            <source src="${data.result.audio_url}" type="audio/wav">
+                            Trình duyệt không hỗ trợ audio.
+                        </audio>
+                        <a href="${data.result.audio_url}" class="download-btn" download>📥 Tải Audio</a>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h3>📝 Transcript với AI Analysis</h3>
+                        <div class="transcript-container">
+                            ${generateTranscriptHTML(data.result.transcript)}
+                        </div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h3>📸 Screenshot</h3>
+                        <div class="screenshot-container">
+                            <img src="${data.result.screenshot_url}" alt="Screenshot" class="screenshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <p style="display: none; color: #6c757d;">Không có screenshot</p>
+                        </div>
+                        <a href="${data.result.screenshot_url}" class="download-btn" download>📥 Screenshot</a>
+                    </div>
+                `;
+            } else if (data.status === 'failed') {
+                console.log('❌ Job failed - displaying error');
+                content.innerHTML = `
+                    <div class="status-card status-failed">
+                        <h3>❌ Xử lý thất bại</h3>
+                        <p>${data.error}</p>
+                        <p>Thời gian tạo: ${new Date(data.created_at).toLocaleString('vi-VN')}</p>
+                        <p>Thời gian lỗi: ${new Date(data.completed_at).toLocaleString('vi-VN')}</p>
+                    </div>
+                `;
+            } else {
+                console.log('❓ Unknown status:', data.status);
+            }
+        }
+        
+        function generateTranscriptHTML(transcript) {
+            if (!transcript || !transcript.sentences) {
+                return '<p>Không có transcript</p>';
+            }
+            
+            return transcript.sentences.map(sentence => {
+                const aiClass = sentence.ai_probability > 0.7 ? 'ai-high' : 
+                               sentence.ai_probability > 0.3 ? 'ai-medium' : 'ai-low';
+                const aiText = sentence.ai_probability > 0.7 ? 'Cao' : 
+                              sentence.ai_probability > 0.3 ? 'Trung bình' : 'Thấp';
+                
+                return `
+                    <div class="sentence ${aiClass}">
+                        <div class="sentence-header">
+                            <span class="speaker">${sentence.speaker || 'Unknown'}</span>
+                            <span class="timestamp">${formatTime(sentence.start)} - ${formatTime(sentence.end)}</span>
+                            <span class="ai-probability ${aiClass}">AI: ${aiText} (${Math.round(sentence.ai_probability * 100)}%)</span>
+                        </div>
+                        <div class="sentence-text">${sentence.text}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function displayError(message) {
+            console.log('💥 Displaying error message:', message);
+            document.getElementById('content').innerHTML = `
+                <div class="error">
+                    <h3>❌ Lỗi</h3>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+        
+        // Tải kết quả khi trang load
+        loadResult();
+    </script>
+</body>
+</html>

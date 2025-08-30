@@ -1,0 +1,324 @@
+{
+  "job_id": "550e8400-e29b-41d4-a716-446655440000",
+  "status": "completed",
+  "created_at": "2025-08-29T10:30:00.000Z",
+  "completed_at": "2025-08-29T10:35:30.000Z",
+  "youtube_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "result": {
+    "transcript": {
+      "text": "We're no strangers to love. You know the rules and so do I. A full commitment's what I'm thinking of. You wouldn't get this from any other guy.",
+      "language": "en",
+      "duration": 15.5,
+      "sentences": [
+        {
+          "id": 1,
+          "text": "We're no strangers to love.",
+          "start": 0.0,
+          "end": 2.5,
+          "speaker": "speaker_1",
+          "confidence": 0.95,
+          "ai_probability": 0.12,
+          "ai_check_timestamp": "2024-01-15T10:34:15.000Z",
+          "words": [
+            {
+              "id": 1,
+              "text": "We're",
+              "start": 0.0,
+              "end": 0.3,
+              "confidence": 0.98,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 2,
+              "text": "no",
+              "start": 0.3,
+              "end": 0.6,
+              "confidence": 0.95,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 3,
+              "text": "strangers",
+              "start": 0.6,
+              "end": 1.2,
+              "confidence": 0.92,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 4,
+              "text": "to",
+              "start": 1.2,
+              "end": 1.5,
+              "confidence": 0.96,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 5,
+              "text": "love.",
+              "start": 1.5,
+              "end": 2.5,
+              "confidence": 0.94,
+              "speaker": "speaker_1"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "text": "You know the rules and so do I.",
+          "start": 2.5,
+          "end": 5.0,
+          "speaker": "speaker_1",
+          "confidence": 0.93,
+          "ai_probability": 0.08,
+          "ai_check_timestamp": "2024-01-15T10:34:16.000Z",
+          "words": [
+            {
+              "id": 6,
+              "text": "You",
+              "start": 2.5,
+              "end": 2.8,
+              "confidence": 0.97,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 7,
+              "text": "know",
+              "start": 2.8,
+              "end": 3.1,
+              "confidence": 0.94,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 8,
+              "text": "the",
+              "start": 3.1,
+              "end": 3.3,
+              "confidence": 0.96,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 9,
+              "text": "rules",
+              "start": 3.3,
+              "end": 3.8,
+              "confidence": 0.91,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 10,
+              "text": "and",
+              "start": 3.8,
+              "end": 4.1,
+              "confidence": 0.95,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 11,
+              "text": "so",
+              "start": 4.1,
+              "end": 4.4,
+              "confidence": 0.93,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 12,
+              "text": "do",
+              "start": 4.4,
+              "end": 4.7,
+              "confidence": 0.92,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 13,
+              "text": "I.",
+              "start": 4.7,
+              "end": 5.0,
+              "confidence": 0.94,
+              "speaker": "speaker_1"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "text": "A full commitment's what I'm thinking of.",
+          "start": 5.0,
+          "end": 8.0,
+          "speaker": "speaker_1",
+          "confidence": 0.89,
+          "ai_probability": 0.15,
+          "ai_check_timestamp": "2024-01-15T10:34:17.000Z",
+          "words": [
+            {
+              "id": 14,
+              "text": "A",
+              "start": 5.0,
+              "end": 5.2,
+              "confidence": 0.96,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 15,
+              "text": "full",
+              "start": 5.2,
+              "end": 5.6,
+              "confidence": 0.88,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 16,
+              "text": "commitment's",
+              "start": 5.6,
+              "end": 6.3,
+              "confidence": 0.85,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 17,
+              "text": "what",
+              "start": 6.3,
+              "end": 6.6,
+              "confidence": 0.93,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 18,
+              "text": "I'm",
+              "start": 6.6,
+              "end": 6.9,
+              "confidence": 0.91,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 19,
+              "text": "thinking",
+              "start": 6.9,
+              "end": 7.4,
+              "confidence": 0.87,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 20,
+              "text": "of.",
+              "start": 7.4,
+              "end": 8.0,
+              "confidence": 0.92,
+              "speaker": "speaker_1"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "text": "You wouldn't get this from any other guy.",
+          "start": 8.0,
+          "end": 11.0,
+          "speaker": "speaker_1",
+          "confidence": 0.91,
+          "ai_probability": 0.11,
+          "ai_check_timestamp": "2024-01-15T10:34:18.000Z",
+          "words": [
+            {
+              "id": 21,
+              "text": "You",
+              "start": 8.0,
+              "end": 8.3,
+              "confidence": 0.95,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 22,
+              "text": "wouldn't",
+              "start": 8.3,
+              "end": 8.7,
+              "confidence": 0.89,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 23,
+              "text": "get",
+              "start": 8.7,
+              "end": 9.0,
+              "confidence": 0.93,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 24,
+              "text": "this",
+              "start": 9.0,
+              "end": 9.3,
+              "confidence": 0.91,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 25,
+              "text": "from",
+              "start": 9.3,
+              "end": 9.6,
+              "confidence": 0.94,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 26,
+              "text": "any",
+              "start": 9.6,
+              "end": 9.9,
+              "confidence": 0.92,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 27,
+              "text": "other",
+              "start": 9.9,
+              "end": 10.3,
+              "confidence": 0.90,
+              "speaker": "speaker_1"
+            },
+            {
+              "id": 28,
+              "text": "guy.",
+              "start": 10.3,
+              "end": 11.0,
+              "confidence": 0.88,
+              "speaker": "speaker_1"
+            }
+          ]
+        }
+      ],
+      "speakers": ["speaker_1"],
+      "words": [
+        {
+          "id": 1,
+          "text": "We're",
+          "start": 0.0,
+          "end": 0.3,
+          "confidence": 0.98,
+          "speaker": "speaker_1"
+        }
+      ],
+      "metadata": {
+        "confidence": 0.92,
+        "word_count": 28,
+        "sentence_count": 4,
+        "speaker_count": 1
+      },
+      "overall_ai_probability": 0.115,
+      "ai_analysis": {
+        "total_sentences": 4,
+        "checked_sentences": 4,
+        "skipped_sentences": 0,
+        "error_sentences": 0,
+        "high_ai_sentences": 0,
+        "low_ai_sentences": 4,
+        "medium_ai_sentences": 0,
+        "confidence_level": "high"
+      }
+    },
+    "screenshot_url": "/api/result/550e8400-e29b-41d4-a716-446655440000/screenshot",
+    "audio_url": "/api/result/550e8400-e29b-41d4-a716-446655440000/audio",
+    "metadata": {
+      "total_sentences": 4,
+      "total_speakers": 1,
+      "average_ai_probability": 0.115,
+      "processing_time": 330000
+    }
+  }
+}
